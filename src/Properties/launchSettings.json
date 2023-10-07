@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "Qtl.DisplayCapture": {
+      "commandName": "Project",
+      "hotReloadEnabled": false,
+      "nativeDebugging": true
+    }
+  }
+}

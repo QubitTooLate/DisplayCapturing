@@ -1,0 +1,9 @@
+﻿
+CreateDXGIFactory1
+IDXGIFactory1
+IDXGIOutput1
+
+D3D11CreateDevice
+
+MonitorFromPoint
+MonitorFromWindow
