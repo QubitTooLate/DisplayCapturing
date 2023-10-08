@@ -10,6 +10,7 @@ This is one of the libraries I wish I had when I started programming in C# and m
 
 * [Goals](#goals)
 * [Samples](#samples)
+* [ToDo](#todo)
 * [License](#license)
 
 ### Samples
@@ -23,6 +24,14 @@ This is one of the libraries I wish I had when I started programming in C# and m
 * Reduce the usage of [The GDI+ API](https://learn.microsoft.com/en-us/windows/win32/gdiplus/-gdiplus-gdi-start).
 * Making this an easy to use and integrate API.
 * Integrating with WPF and WinForms.
+
+### ToDo
+
+* Add `DisplayCapturer.CaptureInID2D1Bitmap(nint)`
+* Add `DisplayCapturer.CaptureInID3D11Texture2D(nint)`
+* Add `DisplayCapturer.CaptureInFile(string)` ?
+* Add `DisplayCapturer.CaptureInWriteableBitmap(System.Windows.Media.Imaging.WriteableBitmap)` ? This would add a dependancy.
+* Add `DisplayCapturer.CaptureInBitmap(System.Drawing.Bitmap)` ? This would add a dependancy.
 
 ### License
 
