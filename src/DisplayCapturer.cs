@@ -1,8 +1,9 @@
-﻿using System;
-using Qtl.DisplayCapture.Globals;
+﻿using Qtl.DisplayCapture.Globals;
+using System;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Direct3D11;
+using Windows.Win32.Graphics.Dwm;
 using Windows.Win32.Graphics.Dxgi;
 using Windows.Win32.System.Com;
 
@@ -220,7 +221,6 @@ public sealed unsafe class DisplayCapturer : IDisposable
         }
     }
 
-    
     /// <exception cref="InvalidOperationException"></exception>
     public int FrameWidth => _areResourcesCreated ? unchecked((int)_frameBufferWidth) : throw new InvalidOperationException(INVALID_OPERATION_MESSAGE);
 

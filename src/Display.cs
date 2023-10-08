@@ -93,6 +93,17 @@ public sealed unsafe class Display : IDisposable
         }
     }
 
+    /// <summary>
+    /// Blocks thread until the next VBlank.
+    /// </summary>
+    /// <exception cref="ObjectDisposedException"></exception>
+    public void Vsync()
+    {
+        if (_isDisposed) { throw new ObjectDisposedException(nameof(Display)); }
+
+        _dxgiOutput1->WaitForVBlank();
+    }
+
     private void Dispose(bool disposing)
     {
         if (_isDisposed) { return; }
