@@ -5,9 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Qtl.Samples.Wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="895" Width="1536" Loaded="Window_Loaded" Closed="Window_Closed">
+        Title="MainWindow" Height="921" Width="1536" Loaded="Window_Loaded" Closed="Window_Closed">
     <Grid>
-        <Image x:Name="CapturedImage" OpacityMask="Black"/>
-        
+        <Image x:Name="CapturedImage" OpacityMask="Black" Margin="0,0,0,24"/>
+        <DockPanel LastChildFill="False" VerticalAlignment="Bottom">
+            <StackPanel Orientation="Horizontal">
+                <Label x:Name="GpuDescriptionLabel" Content="Unknown"/>
+                <Label x:Name="DeviceNameLabel" Content="Unknown"/>
+                <Label x:Name="MonitorHandleLabel" Content="Unknown"/>
+            </StackPanel>
+        </DockPanel>
+
     </Grid>
 </Window>

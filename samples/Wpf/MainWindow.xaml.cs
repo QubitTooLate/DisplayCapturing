@@ -33,6 +33,9 @@ namespace Qtl.Samples.Wpf
             using var displayEnumerator = DisplayEnumerator.Create();
             using var display = displayEnumerator.GetDisplayWithMonitorHandle(monitorHandle);
 
+            var displayProperties = display.Properties;
+            ShowProperties(displayProperties);
+
             _displayCapturer = display.CreateCapturer();
             _displayCapturer.CreateBufferAndBitmap(out _data, out _writableBitmap);
 
@@ -55,6 +58,13 @@ namespace Qtl.Samples.Wpf
             if (_displayCapturer is null || _data is null || _writableBitmap is null) { return; }
 
             _displayCapturer.CaptureInBitmap(_data, _writableBitmap);
+        }
+
+        private void ShowProperties(DisplayProperties properties)
+        {
+            GpuDescriptionLabel.Content = $"Gpu description: {properties.Gpu.Description},";
+            DeviceNameLabel.Content = $"Display name: {properties.DeviceName},";
+            MonitorHandleLabel.Content = $"Monitor handle: {properties.MonitorHandle},";
         }
     }
 }
