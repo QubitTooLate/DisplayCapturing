@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "Qtl.Samples.Wpf": {
+      "commandName": "Project",
+      "nativeDebugging": true,
+      "hotReloadEnabled": false
+    }
+  }
+}
