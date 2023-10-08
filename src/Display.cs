@@ -4,6 +4,12 @@ using Windows.Win32.Graphics.Dxgi;
 
 namespace Qtl.DisplayCapture;
 
+/// <summary>
+/// An abstraction over <see cref="IDXGIAdapter1"/>* and <see cref="IDXGIOutput1"/>*.
+/// </summary>
+/// <remarks>
+/// <para>Don't forget to dispose this object!</para>
+/// </remarks>
 public sealed unsafe class Display : IDisposable
 {
     private readonly IDXGIAdapter1* _dxgiAdapter1;
@@ -12,6 +18,16 @@ public sealed unsafe class Display : IDisposable
     private GpuProperties? _gpuProperties;
     private bool _isDisposed;
 
+    /// <summary>
+    /// Initialize this <see cref="Display"/> using a <see cref="IDXGIAdapter1"/>* and <see cref="IDXGIOutput1"/>*, anything else could cause crashes.
+    /// </summary>
+    /// <remarks>
+    /// <para>This initializer calls <see cref="IDXGIAdapter1.AddRef"/> and <see cref="IDXGIOutput1.AddRef"/>.</para>
+    /// <para><see cref="Dispose()"/> calls <see cref="IDXGIAdapter1.Release"/> and <see cref="IDXGIOutput1.Release"/>.</para>
+    /// </remarks>
+    /// <param name="dxgiAdapter1"><see cref="IDXGIAdapter1"/>*</param>
+    /// <param name="dxgiOutput1"><see cref="IDXGIOutput1"/>*</param>
+    /// <exception cref="ArgumentNullException"></exception>
     public Display(nint dxgiAdapter1, nint dxgiOutput1)
     {
         ArgumentNullException.ThrowIfNull(dxgiAdapter1, nameof(dxgiAdapter1));
@@ -24,6 +40,14 @@ public sealed unsafe class Display : IDisposable
         _dxgiOutput1->AddRef();
     }
 
+    /// <summary>
+    /// Initializes and prepares a <see cref="DisplayCapturer"/> for this <see cref="Display"/>.
+    /// </summary>
+    /// <remarks>
+    /// <para>Don't forget to dispose this object!</para>
+    /// </remarks>
+    /// <returns><see cref="DisplayCapturer"/></returns>
+    /// <exception cref="ObjectDisposedException"></exception>
     public DisplayCapturer CreateCapturer()
     {
         if (_isDisposed) { throw new ObjectDisposedException(nameof(Display)); }
@@ -31,7 +55,7 @@ public sealed unsafe class Display : IDisposable
         var capturer = default(DisplayCapturer);
         try
         {
-            capturer = new DisplayCapturer(_dxgiAdapter1, _dxgiOutput1);
+            capturer = new DisplayCapturer((nint)_dxgiAdapter1, (nint)_dxgiOutput1);
             capturer.PrepareForCapturing();
             return capturer;
         }
@@ -42,6 +66,14 @@ public sealed unsafe class Display : IDisposable
         }
     }
 
+    /// <summary>
+    /// Returns all the properties of this <see cref="Display"/>.
+    /// </summary>
+    /// <remarks>
+    /// <para>The returned <see cref="GpuProperties"/> doesn't update between calls.</para>
+    /// </remarks>
+    /// <returns><see cref="DisplayProperties"/></returns>
+    /// <exception cref="ObjectDisposedException"></exception>
     public DisplayProperties Properties
     {
         get

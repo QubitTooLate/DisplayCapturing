@@ -1,6 +1,6 @@
 ﻿namespace Qtl.DisplayCapture;
 
-public enum Rotation
+public enum DisplayRotation
 {
     Unspecified = 0,
     Identity = 1,

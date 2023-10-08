@@ -10,8 +10,19 @@ using Windows.Win32.Graphics.Gdi;
 
 namespace Qtl.DisplayCapture;
 
+/// <summary>
+/// An abstraction over <see cref="IDXGIFactory1"/>*.
+/// </summary>
+/// <remarks>
+/// <para>Don't forget to dispose this object!</para>
+/// </remarks>
 public sealed unsafe class DisplayEnumerator : IDisposable
 {
+    /// <summary>
+    /// Creates a <see cref="DisplayEnumerator"/>.
+    /// </summary>
+    /// <returns><see cref="DisplayEnumerator"/></returns>
+    /// <exception cref="Exception"></exception>
     public static DisplayEnumerator Create()
     {
         IDXGIFactory1* dxgiFactory1;
@@ -23,7 +34,7 @@ public sealed unsafe class DisplayEnumerator : IDisposable
                 (void**)&dxgiFactory1
             ).ThrowOnFailure();
 
-            return new(dxgiFactory1);
+            return new((nint)dxgiFactory1);
         }
         finally
         {
@@ -31,10 +42,21 @@ public sealed unsafe class DisplayEnumerator : IDisposable
         }
     }
 
+    /// <summary>
+    /// The monitor handle can be used to get a <see cref="Display"/> from <see cref="GetDisplayWithMonitorHandle(nint)"/>.
+    /// </summary>
+    /// <returns>HMONITOR</returns>
     public static IntPtr GetHandleOfPrimaryMonitor() => Native.MonitorFromPoint(default, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTOPRIMARY);
 
+    /// <summary>
+    /// The monitor handle can be used to get a <see cref="Display"/> from <see cref="GetDisplayWithMonitorHandle(nint)"/>.
+    /// If no monitor is found with the <paramref name="windowHandle"/> it returns the primary monitor.
+    /// </summary>
+    /// <param name="windowHandle">A HWND</param>
+    /// <returns>HMONITOR</returns>
     public static IntPtr GetHandleOfMonitorWithWindow(IntPtr windowHandle) => Native.MonitorFromWindow((HWND)windowHandle, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONULL);
 
+    // using nint instead of pointers so the code is "safe"
     private static bool TryGetDisplay(uint i, nint gpu, out nint display)
     {
         IDXGIOutput1* dxgiOutput1;
@@ -50,6 +72,7 @@ public sealed unsafe class DisplayEnumerator : IDisposable
 
     private bool _isDisposed;
 
+    // using nint instead of pointers so the code is "safe"
     private bool TryGetGpu(uint i, out nint gpu)
     {
         IDXGIAdapter1* dxgiAdapter1;
@@ -61,7 +84,16 @@ public sealed unsafe class DisplayEnumerator : IDisposable
         return true;
     }
 
-    public DisplayEnumerator(void* dxgiFactory1)
+    /// <summary>
+    /// Initialize this <see cref="DisplayEnumerator"/> using a <see cref="IDXGIFactory1"/>*, anything else could cause crashes.
+    /// </summary>
+    /// <remarks>
+    /// <para>This initializer calls <see cref="IDXGIFactory1.AddRef"/>.</para>
+    /// <para><see cref="Dispose()"/> calls <see cref="IDXGIFactory1.Release"/>.</para>
+    /// </remarks>
+    /// <param name="dxgiFactory1"><see cref="IDXGIAdapter1"/>*</param>
+    /// <exception cref="ArgumentNullException"></exception>
+    public DisplayEnumerator(nint dxgiFactory1)
     {
         ArgumentNullException.ThrowIfNull(dxgiFactory1, nameof(dxgiFactory1));
 
@@ -69,6 +101,13 @@ public sealed unsafe class DisplayEnumerator : IDisposable
         _dxgiFactory1->AddRef();
     }
 
+    /// <summary>
+    /// Enumerates over the available displays.
+    /// </summary>
+    /// <remarks>
+    /// <para>Don't forget to dispose each <see cref="Display"/>!</para>
+    /// </remarks>
+    /// <returns><see cref="IEnumerable{T}"/></returns>
     public IEnumerable<Display> GetAvailableDisplays()
     {
         for (var ai = 0u; TryGetGpu(ai, out var gpu); ai++)
@@ -84,9 +123,20 @@ public sealed unsafe class DisplayEnumerator : IDisposable
         }
     }
 
+    /// <summary>
+    /// Enumerates over the properties of the available displays.
+    /// The <see cref="DisplayProperties.MonitorHandle"/> can be used in <see cref="GetDisplayWithMonitorHandle(nint)"/> to get the <see cref="Display"/> for the <see cref="DisplayProperties"/>.
+    /// </summary>
+    /// <returns><see cref="IEnumerable{T}"/></returns>
     public IEnumerable<DisplayProperties> GetPropertiesOfAvailableDisplays() => GetAvailableDisplays()
         .SelectAndDispose(display => display.Properties);
 
+    /// <summary>
+    /// Enumerates over the available displays to get the one with the monitor handle.
+    /// </summary>
+    /// <param name="monitorHandle">HMONITOR of which to get the display.</param>
+    /// <returns><see cref="Display"/></returns>
+    /// <exception cref="KeyNotFoundException"></exception>
     public Display GetDisplayWithMonitorHandle(IntPtr monitorHandle) => GetAvailableDisplays()
         .FirstOrDefaultAndDisposeOthers(display => display.Properties.MonitorHandle == monitorHandle) ?? throw new KeyNotFoundException();
 

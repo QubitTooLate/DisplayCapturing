@@ -3,7 +3,10 @@ using Windows.Win32.System.Com;
 
 namespace Qtl.DisplayCapture.Globals;
 
-internal unsafe struct Releaser : IDisposable
+/// <summary>
+/// A collection of functions to safely release <see cref="IUnknown"/>s.
+/// </summary>
+internal static unsafe class Releaser
 {
     public static void ReleaseIfNotNull(nint ptr)
     {
@@ -19,6 +22,14 @@ internal unsafe struct Releaser : IDisposable
         unknown->Release();
     }
 
+    /// <summary>
+    /// Releases <see cref="IUnknown"/> if it's not null and sets it to null after release.
+    /// </summary>
+    /// <remarks>
+    /// <para><see href="https://learn.microsoft.com/en-us/windows/win32/medfound/saferelease">Read more on learn.microsoft.com</see></para>
+    /// </remarks>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="ptr"></param>
     public static void SafeRelease<T>(T** ptr) where T : unmanaged
     {
         if (ptr is null) { return; }
@@ -26,19 +37,5 @@ internal unsafe struct Releaser : IDisposable
         if (unknown is null) { return; }
         unknown->Release();
         *ptr = null;
-    }
-
-    public static Releaser For<T>(T** ptr) where T : unmanaged => new((IUnknown**)ptr);
-
-    private readonly IUnknown** _unknownPtr;
-
-    private Releaser(IUnknown** unknownPtr)
-    {
-        _unknownPtr = unknownPtr;
-    }
-
-    public void Dispose()
-    {
-        SafeRelease(_unknownPtr);
     }
 }
