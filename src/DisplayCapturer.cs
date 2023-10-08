@@ -3,7 +3,6 @@ using System;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Direct3D11;
-using Windows.Win32.Graphics.Dwm;
 using Windows.Win32.Graphics.Dxgi;
 using Windows.Win32.System.Com;
 
