@@ -87,7 +87,10 @@ public sealed unsafe class DisplayCapturer : IDisposable
         ArgumentNullException.ThrowIfNull(dxgiOutput1, nameof(dxgiOutput1));
 
         _dxgiAdapter1 = (IDXGIAdapter1*)dxgiAdapter1;
+        _dxgiAdapter1->AddRef();
+
         _dxgiOutput1 = (IDXGIOutput1*)dxgiOutput1;
+        _dxgiOutput1->AddRef();
     }
 
     public void PrepareForCapturing(uint timeoutInMilliseconds = 1000)

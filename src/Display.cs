@@ -12,31 +12,32 @@ public sealed unsafe class Display : IDisposable
     private GpuProperties? _gpuProperties;
     private bool _isDisposed;
 
-    public Display(void* dxgiAdapter1, void* dxgiOutput1)
+    public Display(nint dxgiAdapter1, nint dxgiOutput1)
     {
         ArgumentNullException.ThrowIfNull(dxgiAdapter1, nameof(dxgiAdapter1));
         ArgumentNullException.ThrowIfNull(dxgiOutput1, nameof(dxgiOutput1));
 
         _dxgiAdapter1 = (IDXGIAdapter1*)dxgiAdapter1;
+        _dxgiAdapter1->AddRef();
+
         _dxgiOutput1 = (IDXGIOutput1*)dxgiOutput1;
+        _dxgiOutput1->AddRef();
     }
 
     public DisplayCapturer CreateCapturer()
     {
         if (_isDisposed) { throw new ObjectDisposedException(nameof(Display)); }
 
+        var capturer = default(DisplayCapturer);
         try
         {
-            _ = _dxgiAdapter1->AddRef();
-            _ = _dxgiOutput1->AddRef();
-            var capturer = new DisplayCapturer(_dxgiAdapter1, _dxgiOutput1);
+            capturer = new DisplayCapturer(_dxgiAdapter1, _dxgiOutput1);
             capturer.PrepareForCapturing();
             return capturer;
         }
         catch
         {
-            _ = _dxgiAdapter1->Release();
-            _ = _dxgiOutput1->Release();
+            capturer?.Dispose();
             throw;
         }
     }
