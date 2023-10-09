@@ -27,6 +27,7 @@ This is one of the libraries I wish I had when I started programming in C# and m
 
 ### ToDo
 
+* Add info about the captured frame.
 * Add `DisplayCapturer.CaptureInID2D1Bitmap(nint)`
 * Add `DisplayCapturer.CaptureInID3D11Texture2D(nint)`
 * Add `DisplayCapturer.CaptureInFile(string)` ?
