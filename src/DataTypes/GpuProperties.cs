@@ -19,31 +19,31 @@ namespace Qtl.DisplayCapture;
 /// <param name="SubSysId">The PCI ID of the sub system.</param>
 /// <param name="VendorId">The PCI ID of the hardware vendor.</param>
 public record GpuProperties(
-    long Luid,
-    nuint DedicatedSystemMemory,
-    nuint DedicatedVideoMemory,
-    string Description,
-    uint DeviceId,
-    uint Flags,
-    uint Revision,
-    nuint SharedSystemMemory,
-    uint SubSysId,
-    uint VendorId
+	long Luid,
+	nuint DedicatedSystemMemory,
+	nuint DedicatedVideoMemory,
+	string Description,
+	uint DeviceId,
+	uint Flags,
+	uint Revision,
+	nuint SharedSystemMemory,
+	uint SubSysId,
+	uint VendorId
 )
 {
-    internal unsafe GpuProperties(DXGI_ADAPTER_DESC1* desc) : this(
-        (long)desc->AdapterLuid.HighPart << 32 | desc->AdapterLuid.LowPart,
-        desc->DedicatedSystemMemory,
-        desc->DedicatedVideoMemory,
-        new string(desc->Description.Value, 0, desc->Description.Length),
-        desc->DeviceId,
-        desc->Flags,
-        desc->Revision,
-        desc->SharedSystemMemory,
-        desc->SubSysId,
-        desc->VendorId
-    )
-    {
+	internal unsafe GpuProperties(DXGI_ADAPTER_DESC1* desc) : this(
+		((long)desc->AdapterLuid.HighPart << 32) | desc->AdapterLuid.LowPart,
+		desc->DedicatedSystemMemory,
+		desc->DedicatedVideoMemory,
+		new string(desc->Description.Value, 0, desc->Description.Length),
+		desc->DeviceId,
+		desc->Flags,
+		desc->Revision,
+		desc->SharedSystemMemory,
+		desc->SubSysId,
+		desc->VendorId
+	)
+	{
 
-    }
+	}
 }

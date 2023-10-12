@@ -15,28 +15,28 @@ namespace Qtl.DisplayCapture;
 /// <param name="MonitorHandle">An HMONITOR handle that represents the display monitor.</param>
 /// <param name="Rotation">A member of the DisplayRotation enumerated type describing on how an image is rotated by the output.</param>
 public record DisplayProperties(
-    GpuProperties Gpu,
-    bool AttachedToDesktop,
-    Rect DesktopCoordinates,
-    string DeviceName,
-    nint MonitorHandle,
-    DisplayRotation Rotation
+	GpuProperties Gpu,
+	bool AttachedToDesktop,
+	Rect DesktopCoordinates,
+	string DeviceName,
+	nint MonitorHandle,
+	DisplayRotation Rotation
 )
 {
-    internal unsafe DisplayProperties(GpuProperties gpu, DXGI_OUTPUT_DESC* desc) : this(
-        gpu,
-        desc->AttachedToDesktop,
-        new Rect(
-            desc->DesktopCoordinates.left,
-            desc->DesktopCoordinates.top,
-            desc->DesktopCoordinates.right,
-            desc->DesktopCoordinates.bottom
-        ),
-        new string(desc->DeviceName.AsSpan()),
-        desc->Monitor,
-        (DisplayRotation)desc->Rotation
-    )
-    {
+	internal unsafe DisplayProperties(GpuProperties gpu, DXGI_OUTPUT_DESC* desc) : this(
+		gpu,
+		desc->AttachedToDesktop,
+		new Rect(
+			desc->DesktopCoordinates.left,
+			desc->DesktopCoordinates.top,
+			desc->DesktopCoordinates.right,
+			desc->DesktopCoordinates.bottom
+		),
+		new string(desc->DeviceName.AsSpan()),
+		desc->Monitor,
+		(DisplayRotation)desc->Rotation
+	)
+	{
 
-    }
+	}
 }
