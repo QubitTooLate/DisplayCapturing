@@ -234,6 +234,8 @@ public sealed unsafe class DisplayCapturer : IDisposable
 
 	private void Dispose(bool disposing)
 	{
+		_ = disposing;
+
 		if (_isDisposed) { return; }
 		_isDisposed = true;
 
