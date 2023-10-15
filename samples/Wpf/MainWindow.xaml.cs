@@ -37,6 +37,7 @@ public partial class MainWindow : Window
 		ShowProperties(displayProperties);
 
 		_displayCapturer = display.CreateCapturer();
+		_ = DisplayCapturer.TryExcludeWindowFromCapture(windowHandle);
 		_displayCapturer.CreateBufferAndBitmap(out _data, out _writableBitmap);
 
 		RenderOptions.SetBitmapScalingMode(CapturedImage, BitmapScalingMode.HighQuality);

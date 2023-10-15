@@ -5,6 +5,7 @@ using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Direct3D11;
 using Windows.Win32.Graphics.Dxgi;
 using Windows.Win32.System.Com;
+using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace Qtl.DisplayCapture;
 
@@ -77,6 +78,10 @@ public sealed unsafe class DisplayCapturer : IDisposable
 		d3d11DeviceContext->Unmap((ID3D11Resource*)d3d11Texture2D, 0);
 		return mapped.RowPitch;
 	}
+
+	public static bool TryExcludeWindowFromCapture(IntPtr windowHandle) => Native.SetWindowDisplayAffinity((HWND)windowHandle, WINDOW_DISPLAY_AFFINITY.WDA_EXCLUDEFROMCAPTURE);
+
+	public static bool TryIncludeExcludedWindowFromCapture(IntPtr windowHandle) => Native.SetWindowDisplayAffinity((HWND)windowHandle, WINDOW_DISPLAY_AFFINITY.WDA_NONE);
 
 	private readonly IDXGIAdapter1* _dxgiAdapter1;
 	private readonly IDXGIOutput1* _dxgiOutput1;

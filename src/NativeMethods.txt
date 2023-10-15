@@ -7,3 +7,5 @@ D3D11CreateDevice
 
 MonitorFromPoint
 MonitorFromWindow
+
+SetWindowDisplayAffinity
